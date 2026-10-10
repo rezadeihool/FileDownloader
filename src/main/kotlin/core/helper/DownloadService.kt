@@ -83,6 +83,10 @@ class DownloadService {
         return data
     }
 
+    fun clearData(){
+        logs.clear()
+    }
+
     enum class Status {
         DOWNLOADING, ERROR, FINISHED
     }

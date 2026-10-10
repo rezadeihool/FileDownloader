@@ -40,9 +40,23 @@ fun Application.configureRouting() {
                 Utils.getJsonBody(true, Gson().toJson(status))
             }
         }
+        get("/clear"){
+            service.clearData()
+        }
+
+        get("/stream/{id}"){
+            val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
+
+            val status = service.getStatus(id) ?: return@get call.respond(HttpStatusCode.NotFound)
+            if (status.status != DownloadService.Status.FINISHED) {
+                return@get call.respond(HttpStatusCode.NotFound)
+            }
+            val file = File("downloads", status.name)
+            call.respondFile(file)
+        }
 
         get("/downloads/{id}") {
-            println("downloads called")
+
 
             val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
 
