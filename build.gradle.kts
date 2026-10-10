@@ -14,6 +14,13 @@ application {
 kotlin {
     jvmToolchain(21)
 }
+
+tasks.shadowJar {
+    manifest {
+        attributes["Main-Class"] = "ir.andy.MainKt"
+    }
+    archiveFileName.set("app.jar")
+}
 dependencies {
     implementation(ktorLibs.serialization.gson)
     implementation(ktorLibs.server.contentNegotiation)
