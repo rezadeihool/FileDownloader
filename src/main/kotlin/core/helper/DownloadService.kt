@@ -87,6 +87,7 @@ class DownloadService {
     fun clearData(){
         logs.clear()
         scope.cancel()
+        File("/downloads").deleteRecursively()
         scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     }
 
