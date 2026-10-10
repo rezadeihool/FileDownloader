@@ -17,7 +17,7 @@ class DownloadService {
         private val logs = ConcurrentHashMap<String, DownloadStatusModel>()
     }
 
-    private var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private var scope = CoroutineScope(Dispatchers.IO.limitedParallelism(10) + SupervisorJob())
     fun downloadFile(uri: String,status : DownloadStatusModel? = null,retries : Int = 0): DownloadStatusModel{
         val downloadID =status?.downloadID ?: generateDownloadId()
         val connection = URI.create(uri).toURL().openConnection() as HttpURLConnection
@@ -25,10 +25,9 @@ class DownloadService {
         val fileName = "$downloadID.$ext"
         connection.requestMethod = "GET"
         connection.setRequestProperty("User-Agent", "Mozilla/5.0")
-        connection.setRequestProperty("Range", "bytes=0-0")
         connection.doInput = true
         connection.connect()
-        val size = connection.getHeaderField("Content-Range").substringAfterLast('/').toLong()
+        val size = if (connection.contentLength > 0) connection.contentLength.toLong() else connection.getHeaderField("Content-Length").toLong()
         scope.launch {
             try {
                 val inputStream = connection.inputStream
@@ -89,7 +88,7 @@ class DownloadService {
         logs.clear()
         scope.cancel()
         File("/downloads").deleteRecursively()
-        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = CoroutineScope(Dispatchers.IO.limitedParallelism(10) + SupervisorJob())
     }
 
     fun getFileName(uri :String):String{
@@ -97,6 +96,6 @@ class DownloadService {
     }
 
     enum class Status {
-        DOWNLOADING, ERROR, FINISHED
+        DOWNLOADING, ERROR, FINISHED,QUEUED
     }
 }
