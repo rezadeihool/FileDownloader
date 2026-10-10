@@ -38,7 +38,7 @@
             --font-head:'Inter',system-ui,sans-serif; --font-body:'Inter',system-ui,sans-serif;
             --font-mono:'JetBrains Mono',ui-monospace,monospace;
             --head-weight:600; --head-tracking:-.018em;
-            --card-style:box; --btn-radius:10px;
+            --btn-radius:10px;
             color-scheme:dark;
         }
         html[data-theme="liquid"]{
@@ -52,7 +52,7 @@
             --font-head:'Inter',system-ui,sans-serif; --font-body:'Inter',system-ui,sans-serif;
             --font-mono:'JetBrains Mono',monospace;
             --head-weight:600; --head-tracking:-.018em;
-            --card-style:glass; --btn-radius:12px;
+            --btn-radius:12px;
             color-scheme:dark;
         }
         html[data-theme="dracula"]{
@@ -65,7 +65,7 @@
             --font-head:'Inter',system-ui,sans-serif; --font-body:'Inter',system-ui,sans-serif;
             --font-mono:'JetBrains Mono',monospace;
             --head-weight:600; --head-tracking:-.02em;
-            --card-style:box; --btn-radius:10px;
+            --btn-radius:10px;
             color-scheme:dark;
         }
         html[data-theme="catppuccin"]{
@@ -78,7 +78,7 @@
             --font-head:'Inter',system-ui,sans-serif; --font-body:'Inter',system-ui,sans-serif;
             --font-mono:'JetBrains Mono',monospace;
             --head-weight:600; --head-tracking:-.02em;
-            --card-style:box; --btn-radius:12px;
+            --btn-radius:12px;
             color-scheme:dark;
         }
         html[data-theme="paper"]{
@@ -91,7 +91,7 @@
             --font-head:'Fraunces',Georgia,serif; --font-body:'Inter',system-ui,sans-serif;
             --font-mono:'JetBrains Mono',monospace;
             --head-weight:600; --head-tracking:-.014em;
-            --card-style:rule; --btn-radius:2px;
+            --btn-radius:2px;
             color-scheme:light;
         }
         html[data-theme="ink"]{
@@ -104,7 +104,7 @@
             --font-head:'Fraunces',Georgia,serif; --font-body:'Inter',system-ui,sans-serif;
             --font-mono:'JetBrains Mono',monospace;
             --head-weight:600; --head-tracking:-.014em;
-            --card-style:rule; --btn-radius:2px;
+            --btn-radius:2px;
             color-scheme:dark;
         }
         html[data-theme="solarized"]{
@@ -117,7 +117,7 @@
             --font-head:'Inter',system-ui,sans-serif; --font-body:'Inter',system-ui,sans-serif;
             --font-mono:'JetBrains Mono',monospace;
             --head-weight:600; --head-tracking:-.02em;
-            --card-style:box; --btn-radius:8px;
+            --btn-radius:8px;
             color-scheme:light;
         }
         html[data-theme="terminal"]{
@@ -130,7 +130,7 @@
             --font-head:'JetBrains Mono',monospace; --font-body:'JetBrains Mono',monospace;
             --font-mono:'JetBrains Mono',monospace;
             --head-weight:700; --head-tracking:0;
-            --card-style:box; --btn-radius:0px;
+            --btn-radius:0px;
             color-scheme:dark;
         }
         html[data-theme="brutalist"]{
@@ -143,7 +143,7 @@
             --font-head:'Inter',system-ui,sans-serif; --font-body:'Inter',system-ui,sans-serif;
             --font-mono:'JetBrains Mono',monospace;
             --head-weight:800; --head-tracking:-.032em;
-            --card-style:box; --btn-radius:0px;
+            --btn-radius:0px;
             color-scheme:light;
         }
 
@@ -217,7 +217,7 @@
            LAYOUT
            ============================================================ */
         .wrap{
-            position:relative; z-index:1; max-width:760px; margin:0 auto;
+            position:relative; z-index:1; max-width:780px; margin:0 auto;
             padding:72px 24px 120px;
             animation:pageIn .5s cubic-bezier(.2,.8,.3,1) both;
         }
@@ -613,6 +613,7 @@
         html[data-theme="terminal"] .name::before{ content:"$ "; color:var(--muted); }
         html[lang="fa"] .name{ font-size:13.5px; }
 
+        /* sub line: id · bytes · pct · speed · eta */
         .sub{
             font-size:11.5px; color:var(--muted); margin-top:4px;
             font-family:var(--font-mono);
@@ -626,16 +627,30 @@
         }
         .sub .note{
             flex:0 0 auto; font-size:11px; font-weight:500;
-            display:inline-flex; align-items:center; gap:6px;
         }
         .sub .note.warn{ color: var(--warn); }
-        .sub .note.warn::after{
-            content:""; display:inline-block; width:4px; height:4px;
-            border-radius:50%; background:currentColor;
-            animation:dotPulse 1.4s ease-in-out infinite;
-        }
         .sub .note.muted{ color: var(--muted); font-style:italic; }
-        html[data-theme="terminal"] .sub .note.warn::after{ content:none; }
+
+        /* stats row: speed · eta · elapsed */
+        .stats{
+            display:flex; align-items:center; flex-wrap:wrap;
+            gap:6px 14px;
+            margin-top:6px;
+            font-family:var(--font-mono);
+            font-size:11.5px;
+            color:var(--ink-soft);
+            font-variant-numeric:tabular-nums;
+            min-height:16px;
+        }
+        .stats .stat{
+            display:inline-flex; align-items:center; gap:5px;
+            white-space:nowrap;
+        }
+        .stats .stat svg{ width:12px; height:12px; color:var(--muted); flex:0 0 auto; }
+        .stats .stat .val{ color: var(--ink); }
+        .stats .stat.muted .val{ color: var(--muted); }
+        .stats .sep{ color: var(--muted); opacity:.5; }
+        html[data-theme="terminal"] .stats .stat::before{ content:""; }
 
         /* ============================================================
            CARD ERROR
@@ -675,15 +690,8 @@
         .badge.busy{ color:var(--warn); }
         .badge.ok{ color:var(--ok); }
         .badge.err{ color:var(--err); }
-        .badge.busy::after{
-            content:""; display:inline-block; width:4px; height:4px;
-            border-radius:50%; background:currentColor;
-            animation:dotPulse 1.4s ease-in-out infinite;
-        }
-        html[data-theme="terminal"] .badge.busy::after{ content:none; }
         html[data-theme="terminal"] .badge::before{ content:"["; opacity:.5; }
         html[data-theme="terminal"] .badge::after{ content:"]"; opacity:.5; }
-        html[data-theme="terminal"] .badge.busy::after{ content:"]"; animation:none; }
         html[data-theme="brutalist"] .badge{
             border:1px solid var(--rule); padding:3px 7px;
             background:var(--surface); font-size:10px;
@@ -691,11 +699,9 @@
         html[data-theme="brutalist"] .badge.ok{ background:var(--ok); color:#fff; border-color:var(--rule); }
         html[data-theme="brutalist"] .badge.busy{ background:var(--warn); color:#000; border-color:var(--rule); }
         html[data-theme="brutalist"] .badge.err{ background:var(--err); color:#fff; border-color:var(--rule); }
-        html[data-theme="brutalist"] .badge.busy::after{ content:none; }
-        @keyframes dotPulse{ 50%{ opacity:.3; } }
 
         /* ============================================================
-           PROGRESS  (0 → 100% real, driven by bytes/size)
+           PROGRESS
            ============================================================ */
         .bar{
             height:4px; background:var(--rule); overflow:hidden;
@@ -704,11 +710,10 @@
         html[data-theme="brutalist"] .bar{ height:12px; border:1px solid var(--rule); border-radius:0; }
         html[data-theme="paper"] .bar,
         html[data-theme="ink"] .bar{ border-radius:0; height:2px; }
-
         .bar i{
             display:block; height:100%; width:0;
             background:var(--accent);
-            transition:width .55s cubic-bezier(.2,.8,.3,1);
+            transition:width .7s cubic-bezier(.22,.61,.36,1);
             position:relative; border-radius:inherit;
             will-change: width;
         }
@@ -723,11 +728,11 @@
             background: var(--accent);
             box-shadow: 0 0 8px rgba(127,199,217,0.5);
         }
-        /* shimmer while actively downloading with a known size */
+        /* shimmer while downloading with known size — continuous, never restarts */
         .card:has(.badge.busy) .bar i::after{
             content:""; position:absolute; inset:0;
-            background:linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
-            animation:shimmer 1.6s ease-in-out infinite;
+            background:linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+            animation:shimmer 1.8s ease-in-out infinite;
         }
         @keyframes shimmer{
             0%{ transform:translateX(-100%); }
@@ -735,8 +740,7 @@
         }
         /* indeterminate sweep ONLY when size is unknown */
         .card.is-unknown-size:has(.badge.busy) .bar i{
-            animation:indeterminate 1.8s cubic-bezier(.4,.1,.3,1) infinite;
-            margin-inline-start:0;
+            animation:indeterminate 1.9s cubic-bezier(.4,.1,.3,1) infinite;
         }
         @keyframes indeterminate{
             0%{ margin-inline-start:-40%; width:40%; }
@@ -1032,7 +1036,7 @@
             working:'working…',
             ready:'Ready', failed:'Failed', queued:'Queued', downloading:'Downloading',
             stillDownloading:'still downloading…', sizeUnknown:'size unknown',
-            etaLeft:'left', etaCalc:'calculating…',
+            etaLeft:'left', etaCalc:'calculating…', elapsed:'elapsed',
             /* start errors */
             errNoUrl:'Please enter a URL first.',
             errInvalidUrl:'That does not look like a valid URL.',
@@ -1046,6 +1050,7 @@
             errRejected:'Server rejected the request',
             /* runtime errors */
             errPollLost:'Lost connection to server. Retrying…',
+            errCopy:'Could not copy to clipboard.',
             /* success */
             toastStarted:'Download started',
             toastCleared:'Cleared',
@@ -1062,7 +1067,7 @@
             working:'در حال انجام…',
             ready:'آماده', failed:'خطا', queued:'در انتظار', downloading:'در حال دانلود',
             stillDownloading:'در حال دانلود…', sizeUnknown:'حجم نامشخص',
-            etaLeft:'باقی‌مانده', etaCalc:'در حال محاسبه…',
+            etaLeft:'باقی‌مانده', etaCalc:'در حال محاسبه…', elapsed:'سپری‌شده',
             errNoUrl:'لطفاً ابتدا یک نشانی وارد کنید.',
             errInvalidUrl:'این نشانی معتبر به نظر نمی‌رسد.',
             errNetwork:'اتصال به سرور برقرار نشد. اتصال خود را بررسی کنید.',
@@ -1074,6 +1079,7 @@
             errNoId:'سرور شناسه دانلود برنگرداند.',
             errRejected:'سرور درخواست را رد کرد',
             errPollLost:'ارتباط با سرور قطع شد. تلاش مجدد…',
+            errCopy:'کپی در حافظه ممکن نشد.',
             toastStarted:'دانلود شروع شد',
             toastCleared:'پاک شد',
             toastRemoved:'حذف شد',
@@ -1098,6 +1104,9 @@
         check: `<svg viewBox="0 0 24 24" ${S}><polyline points="20 6 9 17 4 12"/></svg>`,
         alert: `<svg viewBox="0 0 24 24" ${S}><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
         inbox: `<svg viewBox="0 0 24 24" ${S}><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>`,
+        down:  `<svg viewBox="0 0 24 24" ${S}><path d="M12 5v14"/><path d="m5 12 7 7 7-7"/></svg>`,
+        clock: `<svg viewBox="0 0 24 24" ${S}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
+        hour:  `<svg viewBox="0 0 24 24" ${S}><circle cx="12" cy="12" r="9"/><path d="M12 8v4h4"/></svg>`,
     };
 
     /* ============================================================
@@ -1107,17 +1116,36 @@
     const listEl = $('#list'), urlEl = $('#url'), goEl = $('#go'), hintEl = $('#hint');
     const toastsEl = $('#toasts');
     const themeBtn = $('#themeBtn'), themeMenu = $('#themeMenu');
-    const KEY = 'dl.items.v4';
+    const KEY = 'dl.items.v5';
 
     let items = load();
-    function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } }
+    function load(){
+        try {
+            const raw = JSON.parse(localStorage.getItem(KEY)) || [];
+            return raw.map(it => ({
+                ...it,
+                error: null,
+                startedAt: it.startedAt || it.at || Date.now(),
+                finishedAt: it.finishedAt || null,
+            }));
+        } catch { return []; }
+    }
     function save(){
         try {
-            /* strip transient error field so it isn't persisted between sessions */
             const clean = items.map(({ error, ...rest }) => rest);
             localStorage.setItem(KEY, JSON.stringify(clean));
         } catch {}
     }
+
+    /* ============================================================
+       Idempotent DOM writers — only touch the DOM when the value
+       actually changes, so animations never restart on a poll.
+       ============================================================ */
+    function setText(el, txt){ if (el.textContent !== txt) el.textContent = txt; }
+    function setHidden(el, hidden){ if (el.hidden !== hidden) el.hidden = hidden; }
+    function setClass(el, cls){ if (el.className !== cls) el.className = cls; }
+    function setWidth(el, w){ if (el.style.width !== w) el.style.width = w; }
+    function setAttr(el, name, val){ if (el.getAttribute(name) !== val) el.setAttribute(name, val); }
 
     /* ============================================================
        Toasts
@@ -1125,8 +1153,7 @@
     function toast(msg, type = '', ms = 2800){
         const el = document.createElement('div');
         el.className = 'toast ' + type;
-        el.innerHTML = (type === 'ok' ? ICON.check : type === 'err' ? ICON.alert : '') +
-            '<span></span>';
+        el.innerHTML = (type === 'ok' ? ICON.check : type === 'err' ? ICON.alert : '') + '<span></span>';
         el.querySelector('span').textContent = msg;
         toastsEl.appendChild(el);
         requestAnimationFrame(() => el.classList.add('show'));
@@ -1161,6 +1188,8 @@
             downloaded: Number(d.file_current_dl_size) || 0,
             status: d.file_dl_status || 'DOWNLOADING',
             at: Number(d.file_creation_date) || Date.now(),
+            startedAt: Date.now(),
+            finishedAt: null,
             error: null
         };
     }
@@ -1174,7 +1203,7 @@
     }
 
     /* ============================================================
-       Helpers
+       Format helpers
        ============================================================ */
     function fmtBytes(n){
         n = Number(n);
@@ -1184,8 +1213,29 @@
         return n.toFixed(i && n < 10 ? 1 : 0) + ' ' + u[i];
     }
 
+    /* Speed in MB/s (adaptive for slow links) */
+    function fmtSpeed(bps){
+        if (!isFinite(bps) || bps <= 0) return '';
+        const mb = bps / (1024 * 1024);
+        if (mb >= 1) return mb.toFixed(2) + ' MB/s';
+        const kb = bps / 1024;
+        if (kb >= 1) return kb.toFixed(0) + ' KB/s';
+        return bps.toFixed(0) + ' B/s';
+    }
+
     function fmtDuration(sec){
         sec = Math.max(0, Math.round(sec));
+        if (sec < 60) return sec + 's';
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        if (m < 60) return m + 'm ' + s + 's';
+        const h = Math.floor(m / 60);
+        const mm = m % 60;
+        return h + 'h ' + mm + 'm';
+    }
+
+    function fmtElapsed(ms){
+        const sec = Math.max(0, Math.round(ms / 1000));
         if (sec < 60) return sec + 's';
         const m = Math.floor(sec / 60);
         const s = sec % 60;
@@ -1222,27 +1272,11 @@
         return ICON.file;
     }
 
-    /* Animated percent counter — smooth 0→100 transitions */
-    function setPct(el, target){
-        const from = Number(el.dataset.pct || 0);
-        if (from === target){ el.textContent = target + '%'; return; }
-        el.dataset.pct = target;
-        const start = performance.now();
-        const dur = 420;
-        (function tick(now){
-            const k = Math.min(1, (now - start) / dur);
-            const eased = 1 - Math.pow(1 - k, 3);
-            el.textContent = Math.round(from + (target - from) * eased) + '%';
-            if (k < 1) requestAnimationFrame(tick);
-        })(performance.now());
-    }
-
-    /* ---- Speed / ETA sampling ----------------------------------
-       We keep a rolling window of (timestamp, bytesDownloaded)
-       samples on each node. Speed = Δbytes / Δt over the window.
-       ETA = (totalSize - downloaded) / speed.                     */
-    const SAMPLE_WINDOW_MS = 30_000;   /* keep ~30s of history */
-    const SAMPLE_MIN_GAP_MS = 800;     /* don't spam samples */
+    /* ============================================================
+       Speed sampling — rolling 30 s window per card
+       ============================================================ */
+    const SAMPLE_WINDOW_MS = 30_000;
+    const SAMPLE_MIN_GAP_MS = 800;
 
     function pushSample(n, bytes){
         if (!n.samples) n.samples = [];
@@ -1254,7 +1288,6 @@
             if (dt < SAMPLE_MIN_GAP_MS) return;
         }
         n.samples.push({ t: now, bytes });
-        /* drop samples older than the window */
         const cutoff = now - SAMPLE_WINDOW_MS;
         while (n.samples.length > 2 && n.samples[0].t < cutoff) n.samples.shift();
         if (n.samples.length > 40) n.samples.shift();
@@ -1268,7 +1301,7 @@
         if (dt <= 0.5) return 0;
         const dB = last.bytes - first.bytes;
         if (dB <= 0) return 0;
-        return dB / dt;   /* bytes per second */
+        return dB / dt;
     }
 
     /* ============================================================
@@ -1316,6 +1349,7 @@
       <span class="badge"></span>
     </div>
     <div class="bar"><i></i></div>
+    <div class="stats"></div>
     <div class="card-error" hidden></div>
     <div class="actions"></div>
     <video class="player" controls preload="metadata" playsinline hidden></video>`;
@@ -1326,12 +1360,14 @@
             note: el.querySelector('.note'),
             badge: el.querySelector('.badge'),
             fill: el.querySelector('.bar i'),
+            stats: el.querySelector('.stats'),
             errorEl: el.querySelector('.card-error'),
             actions: el.querySelector('.actions'),
             video: el.querySelector('.player'),
             lastStatus: it.status,
             videoLoaded: false,
             actionsSig: null,
+            statsSig: null,
             samples: []
         };
         return n;
@@ -1343,13 +1379,16 @@
         const busy = !done && !fail;
 
         if (wasActive && done){
-            n.el.classList.remove('just-done');
-            void n.el.offsetWidth;
-            n.el.classList.add('just-done');
-            setTimeout(() => n.el.classList.remove('just-done'), 1200);
+            if (!it.finishedAt) it.finishedAt = Date.now();
+            /* add just-done only once */
+            if (!n.el.classList.contains('just-done')){
+                n.el.classList.add('just-done');
+                setTimeout(() => n.el.classList.remove('just-done'), 1200);
+            }
             toast(t('ready') + ' · ' + (it.name || ''), 'ok');
             n.samples = [];
         }
+        if (!it.finishedAt && (done || fail)) it.finishedAt = Date.now();
         n.lastStatus = it.status;
 
         /* ---- values ---- */
@@ -1359,14 +1398,13 @@
         const pct = sizeKnown && downloaded > 0
             ? Math.min(100, Math.floor(downloaded / sizeRaw * 100)) : 0;
 
-        /* sample for ETA */
         if (busy && downloaded > 0) pushSample(n, downloaded);
 
         /* ---- name ---- */
-        n.name.textContent = it.name || 'file';
-        n.name.title = it.url || it.id;
+        setText(n.name, it.name || 'file');
+        setAttr(n.name, 'title', it.url || it.id);
 
-        /* ---- sub line: id · bytes · pct · eta ---- */
+        /* ---- sub line: id · bytes · pct ---- */
         const parts = [it.id];
         if (sizeKnown){
             parts.push(busy
@@ -1375,63 +1413,69 @@
         } else if (downloaded > 0){
             parts.push(fmtBytes(downloaded));
         }
-        if (busy && sizeKnown && downloaded > 0){
-            parts.push(pct + '%');
-            const speed = computeSpeed(n);
-            if (speed > 0){
-                const etaSec = (sizeRaw - downloaded) / speed;
-                if (etaSec > 0 && etaSec < 86400 * 3){
-                    parts.push('~' + fmtDuration(etaSec) + ' ' + t('etaLeft'));
-                }
-            } else {
-                parts.push(t('etaCalc'));
-            }
-        }
-        n.subText.textContent = parts.filter(Boolean).join('  ·  ');
+        if (busy && sizeKnown && downloaded > 0) parts.push(pct + '%');
+        setText(n.subText, parts.filter(Boolean).join('  ·  '));
 
-        /* ---- note: unknown-size messaging ---- */
+        /* ---- note (unknown size) ---- */
         if (busy && !sizeKnown && downloaded > 0){
-            n.note.hidden = false;
-            n.note.className = 'note warn';
-            n.note.textContent = t('stillDownloading');
+            setHidden(n.note, false);
+            setClass(n.note, 'note warn');
+            setText(n.note, t('stillDownloading'));
         } else if (busy && !sizeKnown){
-            n.note.hidden = false;
-            n.note.className = 'note muted';
-            n.note.textContent = t('sizeUnknown');
+            setHidden(n.note, false);
+            setClass(n.note, 'note muted');
+            setText(n.note, t('sizeUnknown'));
         } else {
-            n.note.hidden = true;
-            n.note.textContent = '';
+            setHidden(n.note, true);
+            if (n.note.textContent) setText(n.note, '');
         }
 
-        /* ---- card error (poll failure) ---- */
-        if (it.error && busy){
-            n.errorEl.hidden = false;
-            n.errorEl.innerHTML = ICON.alert;
-            const span = document.createElement('span');
-            span.textContent = it.error;
-            n.errorEl.appendChild(span);
-        } else {
-            n.errorEl.hidden = true;
+        /* ---- stats row: speed · eta · elapsed ----
+           Rebuilt only when the number of stats changes; otherwise
+           we just update the .val spans by index.                    */
+        updateStats(n, it, { busy, done, fail, sizeKnown, sizeRaw, downloaded });
+
+        /* ---- card error ---- */
+        const hasError = !!(it.error && busy);
+        setHidden(n.errorEl, !hasError);
+        if (hasError){
+            const sig = it.error;
+            if (n.errorEl.dataset.sig !== sig){
+                n.errorEl.dataset.sig = sig;
+                n.errorEl.innerHTML = ICON.alert;
+                const span = document.createElement('span');
+                span.textContent = sig;
+                n.errorEl.appendChild(span);
+            }
+        } else if (n.errorEl.dataset.sig){
+            n.errorEl.dataset.sig = '';
             n.errorEl.textContent = '';
         }
 
         /* ---- badge ---- */
-        n.badge.innerHTML = (done ? ICON.check : fail ? ICON.alert : '') +
+        const badgeClass = 'badge ' + (done ? 'ok' : fail ? 'err' : 'busy');
+        const badgeHtml = (done ? ICON.check : fail ? ICON.alert : '') +
             '<span>' + label(it.status) + '</span>';
-        n.badge.className = 'badge ' + (done ? 'ok' : fail ? 'err' : 'busy');
-
-        /* ---- progress bar: 0→100 driven by downloaded/size ----
-           - known size  → width = pct% (smooth transition, shimmer overlay)
-           - unknown size→ width cleared + class forces the indeterminate sweep
-           - done        → width = 100%                                          */
-        n.el.classList.toggle('is-unknown-size', busy && !sizeKnown);
-        if (done){
-            n.fill.style.width = '100%';
-        } else if (sizeKnown){
-            n.fill.style.width = (downloaded > 0 ? pct : 0) + '%';
-        } else {
-            n.fill.style.width = '';
+        if (n.badge.dataset.sig !== badgeHtml){
+            n.badge.dataset.sig = badgeHtml;
+            n.badge.innerHTML = badgeHtml;
         }
+        setClass(n.badge, badgeClass);
+
+        /* ---- progress bar ----
+           known size  → real 0→100% width
+           unknown     → indeterminate sweep (CSS class)
+           done        → 100%
+           The width string is only written if it changed, so the
+           transition doesn't re-fire on every 2.5s poll.               */
+        const unknownSize = busy && !sizeKnown;
+        if (n.el.classList.contains('is-unknown-size') !== unknownSize){
+            n.el.classList.toggle('is-unknown-size', unknownSize);
+        }
+        let width = '';
+        if (done) width = '100%';
+        else if (sizeKnown) width = (downloaded > 0 ? pct : 0) + '%';
+        setWidth(n.fill, width);
 
         /* ---- action buttons ---- */
         const sig = lang;
@@ -1446,14 +1490,18 @@
             n.saveBtn = n.actions.querySelector('[data-act="save"]');
         }
         if (n.playBtn){
-            n.playBtn.disabled = !done;
-            n.playBtn.title = !done ? t('working') : '';
+            if (n.playBtn.disabled !== !done) n.playBtn.disabled = !done;
+            setAttr(n.playBtn, 'title', !done ? t('working') : '');
         }
         if (n.saveBtn){
-            n.saveBtn.classList.toggle('is-disabled', !done);
-            n.saveBtn.setAttribute('aria-disabled', String(!done));
-            n.saveBtn.href = done ? `/downloads/${encodeURIComponent(it.id)}` : '#';
-            n.saveBtn.title = !done ? t('working') : '';
+            const wantDisabled = !done;
+            if (n.saveBtn.classList.contains('is-disabled') !== wantDisabled){
+                n.saveBtn.classList.toggle('is-disabled', wantDisabled);
+            }
+            setAttr(n.saveBtn, 'aria-disabled', String(wantDisabled));
+            const href = done ? `/downloads/${encodeURIComponent(it.id)}` : '#';
+            if (n.saveBtn.getAttribute('href') !== href) n.saveBtn.setAttribute('href', href);
+            setAttr(n.saveBtn, 'title', !done ? t('working') : '');
         }
 
         /* ---- deferred video src ---- */
@@ -1462,6 +1510,82 @@
             n.videoLoaded = true;
         }
     }
+
+    /* --------- stats row (speed / eta / elapsed) --------- */
+    function updateStats(n, it, { busy, done, fail, sizeKnown, sizeRaw, downloaded }){
+        const stats = [];
+
+        if (busy){
+            /* speed */
+            const speed = computeSpeed(n);
+            if (speed > 0) stats.push({ key:'speed', icon:ICON.down, text: fmtSpeed(speed) });
+
+            /* eta */
+            if (sizeKnown && speed > 0){
+                const etaSec = (sizeRaw - downloaded) / speed;
+                if (etaSec > 0 && etaSec < 86400 * 3){
+                    stats.push({ key:'eta', icon:ICON.hour, text: '~' + fmtDuration(etaSec) + ' ' + t('etaLeft') });
+                }
+            } else if (sizeKnown && downloaded > 0 && !speed){
+                stats.push({ key:'eta', icon:ICON.hour, text: t('etaCalc'), muted: true });
+            }
+
+            /* elapsed (updated in-place by the ticker) */
+            stats.push({ key:'elapsed', icon:ICON.clock, text: fmtElapsed(Date.now() - (it.startedAt || Date.now())) + ' ' + t('elapsed'), live:true });
+        } else if (done || fail){
+            /* show final elapsed for completed/failed items */
+            if (it.startedAt && it.finishedAt){
+                stats.push({ key:'elapsed', icon:ICON.clock, text: fmtElapsed(it.finishedAt - it.startedAt) + ' ' + t('elapsed'), live:false });
+            }
+            if (fail && it.error) stats.push({ key:'error', text: it.error, muted:true });
+        }
+
+        const sig = stats.map(s => s.key + '|' + (s.muted?'m':'') + '|' + (s.live?'l':'')).join(',');
+        if (n.statsSig !== sig){
+            n.statsSig = sig;
+            n.stats.innerHTML = '';
+            n.statsEls = {};
+            stats.forEach((s, i) => {
+                if (i > 0){
+                    const sep = document.createElement('span');
+                    sep.className = 'sep';
+                    sep.textContent = '·';
+                    n.stats.appendChild(sep);
+                }
+                const span = document.createElement('span');
+                span.className = 'stat' + (s.muted ? ' muted' : '');
+                if (s.icon) span.innerHTML = s.icon;
+                const val = document.createElement('span');
+                val.className = 'val';
+                val.textContent = s.text;
+                span.appendChild(val);
+                n.stats.appendChild(span);
+                n.statsEls[s.key] = val;
+            });
+        } else {
+            /* update only text values, never touching structure */
+            for (const s of stats){
+                const el = n.statsEls?.[s.key];
+                if (el && el.textContent !== s.text) el.textContent = s.text;
+            }
+        }
+    }
+
+    /* ============================================================
+       Per-second elapsed ticker
+       Only updates the elapsed .val text — no full re-render.
+       ============================================================ */
+    setInterval(() => {
+        const now = Date.now();
+        for (const it of items){
+            if (isDone(it.status) || isFail(it.status)) continue;
+            const n = nodes.get(it.id);
+            if (!n || !n.statsEls?.elapsed) continue;
+            const txt = fmtElapsed(now - (it.startedAt || now)) + ' ' + t('elapsed');
+            const el = n.statsEls.elapsed;
+            if (el.textContent !== txt) el.textContent = txt;
+        }
+    }, 1000);
 
     /* ============================================================
        Actions
@@ -1492,7 +1616,7 @@
                 toast(t('copied'), 'ok');
                 setTimeout(() => span.textContent = old, 1200);
             } catch {
-                toast(t('errGenericCopy', 'Could not copy to clipboard'), 'err');
+                toast(t('errCopy'), 'err');
             }
         } else if (act === 'del'){
             items = items.filter(x => x.id !== id);
@@ -1529,16 +1653,8 @@
 
     async function start(){
         const url = urlEl.value.trim();
-        if (!url){
-            failStart(t('errNoUrl'), { shake: true });
-            urlEl.focus();
-            return;
-        }
-        if (!/^https?:\/\//i.test(url)){
-            failStart(t('errInvalidUrl'), { shake: true });
-            urlEl.focus();
-            return;
-        }
+        if (!url){ failStart(t('errNoUrl'), { shake: true }); urlEl.focus(); return; }
+        if (!/^https?:\/\//i.test(url)){ failStart(t('errInvalidUrl'), { shake: true }); urlEl.focus(); return; }
 
         goEl.disabled = true;
         goEl.classList.add('loading');
@@ -1547,7 +1663,6 @@
         if (span) span.textContent = t('starting'); else goEl.textContent = t('starting');
         hintEl.textContent = '';
 
-        /* 1. Network call */
         let res;
         try {
             res = await fetchWithTimeout('/dl/' + encodeURIComponent(url), 20000);
@@ -1555,68 +1670,33 @@
             const msg = err?.name === 'AbortError'
                 ? t('errTimeout')
                 : t('errNetwork') + (err?.message ? ' (' + err.message + ')' : '');
-            failStart(msg);
-            resetStartBtn(oldLabel);
-            return;
+            failStart(msg); resetStartBtn(oldLabel); return;
         }
 
-        /* 2. HTTP status */
         if (!res.ok){
             failStart(`${t('errHttp')}: HTTP ${res.status} ${res.statusText || ''}`.trim());
-            resetStartBtn(oldLabel);
-            return;
+            resetStartBtn(oldLabel); return;
         }
 
-        /* 3. Read the body */
         let text;
-        try {
-            text = await res.text();
-        } catch (err){
-            failStart(`${t('errEmpty')} (${err?.message || 'read failed'})`);
-            resetStartBtn(oldLabel);
-            return;
-        }
+        try { text = await res.text(); }
+        catch (err){ failStart(`${t('errEmpty')} (${err?.message || 'read failed'})`); resetStartBtn(oldLabel); return; }
 
-        if (!text || !text.trim()){
-            failStart(t('errEmpty'));
-            resetStartBtn(oldLabel);
-            return;
-        }
+        if (!text || !text.trim()){ failStart(t('errEmpty')); resetStartBtn(oldLabel); return; }
 
-        /* 4. Parse JSON */
         let parsed;
-        try {
-            parsed = JSON.parse(text);
-        } catch {
-            failStart(`${t('errBadJson')} — ${text.slice(0, 100)}`);
-            resetStartBtn(oldLabel);
-            return;
-        }
+        try { parsed = JSON.parse(text); }
+        catch { failStart(`${t('errBadJson')} — ${text.slice(0, 100)}`); resetStartBtn(oldLabel); return; }
 
-        /* 5. Envelope: { status: false, msg } */
         if (parsed && typeof parsed === 'object' && 'status' in parsed && parsed.status === false){
             const extra = parsed.msg ? ': ' + parsed.msg : '';
-            failStart(t('errRejected') + extra);
-            resetStartBtn(oldLabel);
-            return;
+            failStart(t('errRejected') + extra); resetStartBtn(oldLabel); return;
         }
 
-        /* 6. data field may be nested or direct */
         const d = parsed?.data ?? parsed;
-        if (!d || typeof d !== 'object'){
-            failStart(t('errNoData'));
-            resetStartBtn(oldLabel);
-            return;
-        }
+        if (!d || typeof d !== 'object'){ failStart(t('errNoData')); resetStartBtn(oldLabel); return; }
+        if (!d.file_id){ failStart(t('errNoId')); resetStartBtn(oldLabel); return; }
 
-        /* 7. Must have an id */
-        if (!d.file_id){
-            failStart(t('errNoId'));
-            resetStartBtn(oldLabel);
-            return;
-        }
-
-        /* success */
         items.unshift(fromApi(d, url));
         save(); render();
         urlEl.value = '';
@@ -1650,44 +1730,34 @@
             await Promise.all(active.map(async it => {
                 try {
                     const res = await fetchWithTimeout('/status/' + encodeURIComponent(it.id), 10000);
-
                     if (!res.ok){
                         const msg = `${t('errHttp')}: HTTP ${res.status}`;
                         if (it.error !== msg){ it.error = msg; changed = true; }
                         return;
                     }
-
                     let text;
                     try { text = await res.text(); }
-                    catch {
-                        if (it.error !== t('errEmpty')){ it.error = t('errEmpty'); changed = true; }
-                        return;
-                    }
+                    catch { if (it.error !== t('errEmpty')){ it.error = t('errEmpty'); changed = true; } return; }
                     if (!text || !text.trim()){
                         if (it.error !== t('errEmpty')){ it.error = t('errEmpty'); changed = true; }
                         return;
                     }
-
                     let parsed;
                     try { parsed = JSON.parse(text); }
                     catch {
                         if (it.error !== t('errBadJson')){ it.error = t('errBadJson'); changed = true; }
                         return;
                     }
-
                     if (parsed && typeof parsed === 'object' && parsed.status === false){
                         const msg = t('errRejected') + (parsed.msg ? ': ' + parsed.msg : '');
                         if (it.error !== msg){ it.error = msg; changed = true; }
                         return;
                     }
-
                     const d = parsed?.data ?? parsed;
                     if (!d || typeof d !== 'object'){
                         if (it.error !== t('errNoData')){ it.error = t('errNoData'); changed = true; }
                         return;
                     }
-
-                    /* clear any prior error */
                     if (it.error){ it.error = null; changed = true; }
 
                     const before = it.status + ':' + it.downloaded + ':' + it.size;
@@ -1767,8 +1837,8 @@
         const tg = document.querySelector('.tg-btn');
         if (tg) tg.setAttribute('data-tip', t('contact'));
 
-        nodes.forEach(n => { n.actionsSig = null; });
-        document.querySelectorAll('.badge').forEach(b => b.innerHTML = '');
+        /* force action & stats rebuild on lang change */
+        nodes.forEach(n => { n.actionsSig = null; n.statsSig = null; n.badge.dataset.sig = ''; });
         render();
     }
 
