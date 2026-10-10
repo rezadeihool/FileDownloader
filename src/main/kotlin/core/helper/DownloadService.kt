@@ -37,7 +37,7 @@ class DownloadService {
             try {
                 val inputStream = connection.inputStream
                 val out = saveToDownloads(fileName)
-                inputStream.copyTo(out)
+                inputStream.copyTo(out,(1024)*1024)
                 inputStream.close()
                 out.close()
                 connection.disconnect()
