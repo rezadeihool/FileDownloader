@@ -37,7 +37,11 @@ class DownloadService {
             try {
                 val inputStream = connection.inputStream
                 val out = saveToDownloads(fileName)
-                inputStream.copyTo(out,(1024)*1024)
+                val buffSize = when{
+                    size > ((1024)*1024)*40 -> ((1024)*1024)*4
+                    else -> 1024*8
+                }
+                inputStream.copyTo(out,buffSize)
                 inputStream.close()
                 out.close()
                 connection.disconnect()
