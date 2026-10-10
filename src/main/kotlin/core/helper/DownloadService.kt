@@ -24,6 +24,7 @@ class DownloadService {
         val ext = getFileName(uri)
         val fileName = "$downloadID.$ext"
         connection.requestMethod = "GET"
+        connection.instanceFollowRedirects = true
         connection.setRequestProperty("User-Agent", "Mozilla/5.0")
         connection.setRequestProperty("Accept-Encoding", "identity")
         connection.setRequestProperty("Connection", "keep-alive")
