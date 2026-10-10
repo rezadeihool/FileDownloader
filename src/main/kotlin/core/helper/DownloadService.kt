@@ -25,9 +25,10 @@ class DownloadService {
         val fileName = "$downloadID.$ext"
         connection.requestMethod = "GET"
         connection.setRequestProperty("User-Agent", "Mozilla/5.0")
+        connection.setRequestProperty("Range", "bytes=0-0")
         connection.doInput = true
         connection.connect()
-        val size = connection.contentLength
+        val size = connection.getHeaderField("Content-Range").substringAfterLast('/').toLong()
         scope.launch {
             try {
                 val inputStream = connection.inputStream
