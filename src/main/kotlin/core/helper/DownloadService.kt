@@ -27,7 +27,12 @@ class DownloadService {
         connection.setRequestProperty("User-Agent", "Mozilla/5.0")
         connection.doInput = true
         connection.connect()
-        val size = if (connection.contentLength > 0) connection.contentLength.toLong() else connection.getHeaderField("Content-Length").toLong()
+        var size = -1L
+        runCatching {
+            size = if (connection.contentLength > 0) connection.contentLength.toLong() else connection.getHeaderField("Content-Length").toLong()
+        }.onFailure {
+            size = -1L
+        }
         scope.launch {
             try {
                 val inputStream = connection.inputStream
