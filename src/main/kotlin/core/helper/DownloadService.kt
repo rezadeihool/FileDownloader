@@ -25,6 +25,13 @@ class DownloadService {
         val fileName = "$downloadID.$ext"
         connection.requestMethod = "GET"
         connection.setRequestProperty("User-Agent", "Mozilla/5.0")
+        connection.setRequestProperty("Accept-Encoding", "identity")
+        connection.setRequestProperty("Connection", "keep-alive")
+        connection.setRequestProperty("Cache-Control", "no-cache")
+        connection.setRequestProperty("Accept", "*/*")
+        connection.setRequestProperty("X-Requested-With", "XMLHttpRequest")
+        connection.setRequestProperty("Pragma", "no-cache")
+        connection.setRequestProperty("Range", "bytes=0-")
         connection.doInput = true
         connection.connect()
         var size = -1L
@@ -38,8 +45,8 @@ class DownloadService {
                 val inputStream = connection.inputStream
                 val out = saveToDownloads(fileName)
                 val buffSize = when{
-                    size > ((1024)*1024)*40 -> ((1024)*1024)*4
-                    else -> 1024*8
+                    size > ((1024)*1024)*50 -> ((1024)*1024)*5
+                    else -> 1024*1024
                 }
                 inputStream.copyTo(out,buffSize)
                 inputStream.close()
