@@ -21,7 +21,7 @@ class DownloadService {
     fun downloadFile(uri: String,status : DownloadStatusModel? = null,retries : Int = 0): DownloadStatusModel{
         val downloadID =status?.downloadID ?: generateDownloadId()
         val connection = URI.create(uri).toURL().openConnection() as HttpURLConnection
-        val ext = uri.substringAfterLast(".")
+        val ext = getFileName(uri)
         val fileName = "$downloadID.$ext"
         connection.requestMethod = "GET"
         connection.setRequestProperty("User-Agent", "Mozilla/5.0")
@@ -89,6 +89,10 @@ class DownloadService {
         scope.cancel()
         File("/downloads").deleteRecursively()
         scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    }
+
+    fun getFileName(uri :String):String{
+        return uri.substringAfterLast(".").substringBefore("?")
     }
 
     enum class Status {
