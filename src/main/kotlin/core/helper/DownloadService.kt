@@ -4,6 +4,7 @@ import ir.andy.core.model.DownloadStatusModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.OutputStream
@@ -16,7 +17,7 @@ class DownloadService {
         private val logs = ConcurrentHashMap<String, DownloadStatusModel>()
     }
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     fun downloadFile(uri: String,status : DownloadStatusModel? = null,retries : Int = 0): DownloadStatusModel{
         val downloadID =status?.downloadID ?: generateDownloadId()
         val connection = URI.create(uri).toURL().openConnection() as HttpURLConnection
@@ -46,7 +47,7 @@ class DownloadService {
                 }
             }
         }
-        val data = status ?: DownloadStatusModel(fileName, downloadID, size.toLong(), Status.DOWNLOADING)
+        val data = status ?: DownloadStatusModel(uri,fileName, downloadID, size.toLong(), Status.DOWNLOADING)
         logs[downloadID] = data
         return data
 
@@ -85,6 +86,8 @@ class DownloadService {
 
     fun clearData(){
         logs.clear()
+        scope.cancel()
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     }
 
     enum class Status {

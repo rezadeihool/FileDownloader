@@ -6,20 +6,19 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.utils.io.*
 import ir.andy.core.helper.DownloadService
+import ir.andy.core.helper.Pages
 import ir.andy.core.utils.Utils
 import java.io.File
 import java.net.URLDecoder
 
-@OptIn(InternalAPI::class)
+
 fun Application.configureRouting() {
     val service = DownloadService()
     routing {
         get("/") {
-            call.respond(Utils.getJsonBody(true, "server is running"))
-
-            println(call.parameters["data"])
+            call.response.header("Content-Type", "text/html;charset=utf-8")
+            call.respond(Pages.HOME)
         }
 
 
@@ -56,7 +55,6 @@ fun Application.configureRouting() {
         }
 
         get("/downloads/{id}") {
-
 
             val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
 
