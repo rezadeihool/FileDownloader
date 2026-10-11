@@ -114,17 +114,18 @@ class DownloadService {
         return uri.substringAfterLast(".").substringBefore("?")
     }
 
-    fun deleteOldFilesFromMem(){
-        CoroutineScope(Dispatchers.Main.immediate).launch {
-            delay(Duration.ofMinutes(10))
-            logs.forEach { (key, model) ->
-                if ((System.currentTimeMillis() - model.fileCreationDate) > ((1000*60)*60)*2 ){
-                    //two hours passed
-                    logs.remove(key)
+    fun deleteOldFilesFromMem(scope: CoroutineScope? = null){
+        (scope ?: CoroutineScope(Dispatchers.Default))
+                .launch {
+                    delay(Duration.ofMinutes(10))
+                    logs.forEach { (key, model) ->
+                        if ((System.currentTimeMillis() - model.fileCreationDate) > ((1000*60)*60)*2 ){
+                            //two hours passed
+                            logs.remove(key)
+                        }
+                    }
+                    deleteOldFilesFromMem(this)
                 }
-            }
-            deleteOldFilesFromMem()
-        }
     }
 
     enum class Status {
