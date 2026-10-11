@@ -52,6 +52,20 @@ fun Application.configureRouting() {
             call.respondFile(file)
         }
 
+
+        get("/forceStream/{id}"){
+            val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
+            val f = File("downloads").listFiles()
+            if (f != null) {
+                f.forEach {
+                    if (it.nameWithoutExtension == id && it.isFile) {
+                        return@get call.respondFile(it)
+                    }
+                }
+                call.respondText { "file not found" }
+            }
+            call.respondText { "file not found" }
+        }
         get("/downloads/{id}") {
 
             val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)

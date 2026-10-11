@@ -1,20 +1,23 @@
 package ir.andy.core.helper
 
 import ir.andy.core.model.DownloadStatusModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.time.delay
 import java.io.File
 import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URI
+import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.log
 
 class DownloadService {
     companion object {
         private val logs = ConcurrentHashMap<String, DownloadStatusModel>()
+    }
+
+    init {
+        deleteOldFilesFromMem()
     }
 
     private var scope = CoroutineScope(Dispatchers.IO.limitedParallelism(10) + SupervisorJob())
@@ -59,7 +62,6 @@ class DownloadService {
                     status?.status = Status.ERROR
                 }
                 else{
-                    println("retrying")
                     downloadFile(uri, status, retries + 1)
                 }
             }
@@ -110,6 +112,19 @@ class DownloadService {
 
     fun getFileName(uri :String):String{
         return uri.substringAfterLast(".").substringBefore("?")
+    }
+
+    fun deleteOldFilesFromMem(){
+        CoroutineScope(Dispatchers.Main.immediate).launch {
+            delay(Duration.ofMinutes(10))
+            logs.forEach { (key, model) ->
+                if ((System.currentTimeMillis() - model.fileCreationDate) > ((1000*60)*60)*2 ){
+                    //two hours passed
+                    logs.remove(key)
+                }
+            }
+            deleteOldFilesFromMem()
+        }
     }
 
     enum class Status {
