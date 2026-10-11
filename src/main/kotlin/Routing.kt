@@ -2,17 +2,15 @@ package ir.andy
 
 import com.google.gson.Gson
 import io.ktor.http.*
-import io.ktor.http.content.PartData
-import io.ktor.http.content.forEachPart
+import io.ktor.http.content.*
 import io.ktor.server.application.*
-import io.ktor.server.http.content.staticResources
+import io.ktor.server.http.content.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.cio.writeChannel
-import io.ktor.utils.io.copyAndClose
+import io.ktor.util.cio.*
+import io.ktor.utils.io.*
 import ir.andy.core.helper.DownloadService
-import ir.andy.core.helper.Pages
 import ir.andy.core.utils.Utils
 import java.io.File
 import java.net.URLDecoder

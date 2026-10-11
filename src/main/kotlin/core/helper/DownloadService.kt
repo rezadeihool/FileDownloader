@@ -20,7 +20,7 @@ class DownloadService {
         deleteOldFilesFromMem()
     }
 
-    private var scope = CoroutineScope(Dispatchers.IO.limitedParallelism(10) + SupervisorJob())
+    private var scope = CoroutineScope(Dispatchers.IO.limitedParallelism(25) + SupervisorJob())
     fun downloadFile(uri: String,status : DownloadStatusModel? = null,retries : Int = 0): DownloadStatusModel{
         val downloadID =status?.downloadID ?: generateDownloadId()
         val connection = URI.create(uri).toURL().openConnection() as HttpURLConnection
@@ -40,7 +40,7 @@ class DownloadService {
         connection.connect()
         var size = -1L
         runCatching {
-            size = if (connection.contentLength > 0) connection.contentLength.toLong() else connection.getHeaderField("Content-Length").toLong()
+            size = if (connection.contentLengthLong > 0) connection.contentLengthLong else connection.getHeaderField("Content-Length").toLong()
         }.onFailure {
             size = -1L
         }
@@ -58,6 +58,7 @@ class DownloadService {
                 connection.disconnect()
             } catch (e: Exception) {
                 e.printStackTrace()
+                connection.disconnect()
                 if (retries > 3) {
                     status?.status = Status.ERROR
                 }
@@ -106,7 +107,7 @@ class DownloadService {
     fun clearData(){
         logs.clear()
         scope.cancel()
-        File("/downloads").deleteRecursively()
+        File("downloads").deleteRecursively()
         scope = CoroutineScope(Dispatchers.IO.limitedParallelism(10) + SupervisorJob())
     }
 
@@ -117,7 +118,7 @@ class DownloadService {
     fun deleteOldFilesFromMem(scope: CoroutineScope? = null){
         (scope ?: CoroutineScope(Dispatchers.Default))
                 .launch {
-                    delay(Duration.ofMinutes(10))
+                    delay(Duration.ofMinutes(25))
                     logs.forEach { (key, model) ->
                         if ((System.currentTimeMillis() - model.fileCreationDate) > ((1000*60)*60)*2 ){
                             //two hours passed
