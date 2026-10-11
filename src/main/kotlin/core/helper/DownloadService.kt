@@ -80,9 +80,9 @@ class DownloadService {
         return f.outputStream()
     }
 
-    private fun generateDownloadId(len: Int = 9): String {
+    fun generateDownloadId(len: Int = 10): String {
         val out = StringBuilder()
-        val data = ('a'..'z').plusElement(('A'..'Z')) + ('0'..'9')
+        val data = ('a'..'z') + (('A'..'Z')) + ('0'..'9')
         repeat(len) {
             out.append(data.random())
         }

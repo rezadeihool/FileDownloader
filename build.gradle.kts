@@ -29,6 +29,7 @@ dependencies {
     implementation(ktorLibs.server.websockets)
     implementation(libs.logback.classic)
     implementation("io.ktor:ktor-server-partial-content:3.6.0")
+    implementation("io.ktor:ktor-server-status-pages:3.6.0")
     implementation("io.ktor:ktor-server-auto-head-response:3.6.0")
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
